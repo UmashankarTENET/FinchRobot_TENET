@@ -1,0 +1,179 @@
+import edu.cmu.ri.createlab.terk.robot.finch.*;
+
+Finch myFinch = new Finch();
+
+PFont font;
+
+void setup() 
+  {
+    size(400, 400);
+    myFinch.showAccelerometerGraph();
+    myFinch.buzz(300, 2000);
+  }
+  
+
+void draw() 
+  {
+    double xAccel = myFinch.getXAcceleration();
+    double yAccel = myFinch.getYAcceleration();
+    double zAccel = myFinch.getZAcceleration();
+  
+    myFinch.updateAccelerometerGraph(xAccel, yAccel,zAccel);
+    keyPressed();
+  
+    fill (255, 0, 0);
+    ellipse(100,100,200,200);
+  
+    fill(0,255,0);
+    ellipse(300,100, 200,200);
+  
+    fill (0, 0, 255);
+    ellipse(100, 300, 200,200);
+  
+    fill (255,255,0);
+    ellipse(300, 300, 200,200);
+  
+    fill (255,255,255);
+    ellipse(200,200,100,100);
+  
+    font = loadFont("ComicSansMS-Bold-60.vlw");
+    textFont(font,25);
+  
+    fill(0,0,0,255);
+    text("Front",275,300);
+    text("Back",75,100);
+    text("Left",75,300);
+    text("Right",275,100);
+    text("Stop",175,200);
+    
+    if(mouseX > 220 && mouseY >220)
+    {
+      myFinch.setLED(200,200,0);
+    }
+    else if(mouseX <= 180 && mouseY >220)
+    {
+      myFinch.setLED(0,0,200);
+    }
+    else if(mouseX > 220 && mouseY <= 180)
+    {
+      myFinch.setLED(0,200,0);
+    }
+    else if(mouseX < 180 && mouseY < 180)
+    {
+      myFinch.setLED(200,0,0);
+    }
+    else 
+    {
+      myFinch.setLED(200,200,200);
+    }
+  } 
+  
+  
+void stop()
+ {
+   myFinch.closeAccelerometerGraph();
+   myFinch.quit();
+ }
+
+void keyPressed()
+  { 
+    if(key == CODED)
+    {
+      if(keyCode == UP)
+      {
+        moveFinchForward();
+      }
+      else if (keyCode == RIGHT)
+      {
+        moveFinchRight();
+      }  
+      else if (keyCode == DOWN)
+      {
+        moveFinchBackward();
+      }
+      else if(keyCode== LEFT)
+      {
+        moveFinchLeft();
+      }
+      else if(keyCode== SHIFT)
+      {
+        FinchStop();
+      }
+      else if (keyCode == CONTROL)
+      {
+        int leftWheel = (2*255 /400 * mouseX)-235;
+        int rightWheel = (2*255 /400 * mouseY)-235;
+  
+        myFinch.setWheelVelocities(leftWheel,rightWheel);
+      }
+      else
+      {
+        for (int i=1;i<4;i++)
+        {
+          rotateFinch(i); 
+        }
+      }
+    }
+  }
+
+void moveFinchForward()
+ {
+   int leftWheel = 255;
+   int rightWheel = 255;
+   myFinch.setWheelVelocities(leftWheel,rightWheel);
+ }
+
+void moveFinchBackward()
+ {
+   int leftWheel= -255;
+   int rightWheel = -255;
+   myFinch.setWheelVelocities(leftWheel,rightWheel);
+ }
+
+void moveFinchRight()
+ {
+    int leftWheel= 155;
+    int rightWheel = -155;
+    myFinch.setWheelVelocities(leftWheel,rightWheel);
+ }
+ 
+void moveFinchLeft()
+ {
+    int leftWheel= -155;
+    int rightWheel = 155;
+    myFinch.setWheelVelocities(leftWheel,rightWheel);
+ }
+ 
+void FinchStop()
+ {
+    int leftWheel = 0;
+    int rightWheel = 0;
+    myFinch.setWheelVelocities(leftWheel,rightWheel); 
+ }
+ 
+void rotateFinch( int i)
+ {
+   int time;
+   int leftWheel= 255;
+   int rightWheel = -255;
+   
+   if (i == 1)
+   {
+     time = 1750/4;
+   }
+   else if (i ==2)
+   {
+     time = 1750/2;
+   }
+   else
+   {
+     time = 1750;
+   }
+   
+   myFinch.setWheelVelocities(leftWheel,rightWheel,time);
+   delay(1000);
+   return; 
+  
+ }
+ 
+
